@@ -22,6 +22,7 @@ assistant_id = None
 thread_id = None
 
 app = FastAPI()
+#a comment for testing
 
 # Allow React to talk to us
 app.add_middleware(
