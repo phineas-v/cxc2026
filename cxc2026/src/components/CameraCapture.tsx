@@ -102,7 +102,7 @@ export default function CameraCapture() {
               </button>
             </div>
           )}
-          
+
           {image ? (
             <img src={image} alt="Captured" className="photo-preview" />
           ) : (

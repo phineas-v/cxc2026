@@ -32,14 +32,14 @@ export default function AnalysisResults({ data, loading, error }: Props) {
   if (!data) return null;
 
   // Destructure the new data structure
-  const { score, bar, reasons, ingredients_breakdown, lab_labels } = data;
+  const { lens, score, bar, reasons, ingredients_breakdown, lab_labels } = data;
 
   return (
     <div className="results-container">
       
       {/* 1. BIG SCORE CARD */}
       <div className="score-card">
-        <h3 className="card-title">Real Food Score</h3>
+        <h3 className="card-title">{lens}</h3>
         <div className="score-circle" style={{ borderColor: getScoreColor(score) }}>
           <span className="score-number" style={{ color: getScoreColor(score) }}>
             {score}
@@ -93,7 +93,7 @@ export default function AnalysisResults({ data, loading, error }: Props) {
       
       {/* A. Concerning Ingredients (negative_for_lens) */}
       <IngredientDropdown 
-        title="⚠️ Concerning Additives" 
+        title="⚠️ Concerning" 
         items={ingredients_breakdown.negative_for_lens} 
         color="red"
         isOpen={true} // Default open
@@ -115,7 +115,7 @@ export default function AnalysisResults({ data, loading, error }: Props) {
       
       {/* D. Neutral (neutral_for_lens) */}
       <IngredientDropdown 
-        title="🧂 Neutral (Water/Salt)" 
+        title="🧂 Neutral" 
         items={ingredients_breakdown.neutral_for_lens} 
         color="grey" 
       />
