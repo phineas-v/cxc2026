@@ -1,3 +1,35 @@
+.hamburger-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999; /* Super high to sit on top of everything */
+  
+  background: rgba(255, 255, 255, 0.2); /* Slight see-through background */
+  border: none;
+  color: white; /* Force White Icon */
+  
+  font-size: 1.8rem;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%; /* Circle shape */
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(5px); /* Blurs the camera behind it */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  
+  /* Smooth color transition */
+  transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.hamburger-btn:active {
+  transform: scale(0.9);
+  background: rgba(255, 255, 255, 0.4);
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -40,3 +72,5 @@
 .read-the-docs {
   color: #888;
 }
+
+

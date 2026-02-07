@@ -1,18 +1,10 @@
+// src/components/CameraCapture.tsx
 import { useState, type ChangeEvent } from 'react'
 import './CameraCapture.css'
-
-// 1. Define what an Ingredient looks like
-interface Ingredient {
-  name: string
-  score: number
-  status: "SAFE" | "CAUTION" | "DANGER"
-  explanation: string
-}
+import AnalysisResults, { type Ingredient } from './AnalysisResult' // Import new component
 
 export default function CameraCapture() {
   const [image, setImage] = useState<string | null>(null)
-  
-  // 2. Change state from "string" to "Array of Ingredients"
   const [ingredients, setIngredients] = useState<Ingredient[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>("")
@@ -22,7 +14,9 @@ export default function CameraCapture() {
       const file = e.target.files[0]
       const url = URL.createObjectURL(file)
       setImage(url)
-      setIngredients([]) // Clear old list
+      
+      // Reset states
+      setIngredients([])
       setError("")
       setLoading(true)
 
@@ -30,7 +24,7 @@ export default function CameraCapture() {
       formData.append("file", file)
 
       try {
-        // Replace with your real IP
+        // ⚠️ Make sure this IP matches your computer!
         const response = await fetch("http://172.20.10.3:8000/api/analyze", {
           method: "POST",
           body: formData,
@@ -38,19 +32,17 @@ export default function CameraCapture() {
 
         const data = await response.json()
         
-        // The backend returns a string of JSON, so we might need to parse it twice
-        // depending on how Backboard returns it. 
-        // Let's assume data.health_analysis is the JSON string.
+        // Parse the JSON string from Backboard
         let parsedData;
         try {
-            // Try to parse the text into a real object
-            parsedData = JSON.parse(data.health_analysis);
+            parsedData = typeof data.health_analysis === 'string' 
+                ? JSON.parse(data.health_analysis) 
+                : data.health_analysis;
         } catch (e) {
-            // If it's already an object
             parsedData = data.health_analysis;
         }
 
-        if (parsedData.ingredients) {
+        if (parsedData?.ingredients) {
             setIngredients(parsedData.ingredients)
         } else {
             setError("Could not read ingredients format.")
@@ -64,70 +56,36 @@ export default function CameraCapture() {
     }
   }
 
-  // ... (keep all your imports and logic above) ...
-
-  // Helper function to get the class name based on status string
-  const getStatusClass = (status: string) => {
-    const s = status.toUpperCase();
-    if (s === "SAFE") return "safe";
-    if (s === "DANGER") return "danger";
-    return "caution";
-  }
-
-  const hasResults = ingredients.length > 0;
+  const hasResults = ingredients.length > 0 || loading; // Keep results screen open if loading
 
   return (
     <div className="camera-container">
-      {/* 1. Image Area (Dynamic Size) 
-          If no results, add 'full-screen' class to make it big.
-      */}
-      <div className={`image-area ${!hasResults ? 'full-screen' : ''}`}>
-        {image ? (
-          <img src={image} alt="Captured" className="photo-preview" />
-        ) : (
-          <div className="placeholder">
-            {/* You can add an icon here if you want */}
-            <div style={{fontSize: '3rem', marginBottom: '10px'}}>📸</div>
-            <p>Take a photo of ingredients</p>
-          </div>
-        )}
-      </div>
-
-      {/* 2. Results List (Hidden until we have data) */}
-      <div className={`results-list ${!hasResults && !loading ? 'hidden' : ''}`}>
+      
+      {/* THE SLIDING WRAPPER */}
+      <div className={`sliding-wrapper ${hasResults ? 'show-results' : 'show-camera'}`}>
         
-        {loading && (
-           <div className="loading-text">
-             <p>🧠 AI is analyzing ingredients...</p>
-           </div>
-        )}
-        
-        {error && <p className="error-text">{error}</p>}
-
-        {hasResults && (
-          <h3 style={{margin: '0 0 15px 5px', color: 'white'}}>
-            Analysis Results ({ingredients.length})
-          </h3>
-        )}
-
-        {ingredients.map((item, index) => (
-          <details key={index} className="ingredient-card">
-            <summary className={`ingredient-header ${item.status.toLowerCase()}`}>
-              <span className="ingredient-name">{item.name}</span>
-              {/* Dynamic color for badge based on status */}
-              <span className={`score-badge ${item.status.toLowerCase()}`}>
-                {item.score}
-              </span>
-            </summary>
-            
-            <div className="ingredient-body">
-              <p>{item.explanation}</p>
+        {/* LEFT SIDE: Camera */}
+        <div className="image-area">
+          {image ? (
+            <img src={image} alt="Captured" className="photo-preview" />
+          ) : (
+            <div className="placeholder">
+              <div style={{fontSize: '3rem', marginBottom: '10px'}}>📸</div>
+              <p>Take a photo</p>
             </div>
-          </details>
-        ))}
+          )}
+        </div>
+
+        {/* RIGHT SIDE: The New Results Component */}
+        <AnalysisResults 
+          ingredients={ingredients} 
+          loading={loading} 
+          error={error} 
+        />
+
       </div>
 
-      {/* 3. Bottom Button (Always visible) */}
+      {/* BUTTON (Always visible) */}
       <div className="controls-area">
         <input 
           type="file" 
@@ -139,9 +97,10 @@ export default function CameraCapture() {
         />
         
         <label htmlFor="cameraInput" className="camera-button">
-          {loading ? "Scanning..." : (image ? "📸 Retake Photo" : "📸 Open Camera")}
+          {loading ? "Scanning..." : (ingredients.length > 0 ? "📸 Scan New" : "📸 Take Photo")}
         </label>
       </div>
+
     </div>
   )
 }

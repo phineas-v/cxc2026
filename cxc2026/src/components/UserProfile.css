@@ -1,0 +1,117 @@
+/* src/components/UserProfile.css */
+
+/* 1. Page Container */
+.profile-container {
+  padding: 20px;
+  padding-top: 90px; /* Space for the floating menu button */
+  background-color: #f4f6f8; /* Light app background */
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-sizing: border-box;
+}
+
+/* 2. Title */
+.profile-title {
+  margin: 0 0 20px 5px;
+  color: #1a1a1a;
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+/* 3. The White Card */
+.profile-card {
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05); /* Soft, expensive-looking shadow */
+  border: 1px solid rgba(0,0,0,0.02);
+}
+
+/* 4. Form Layout */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px; /* Space between side-by-side inputs */
+}
+
+.form-half {
+  flex: 1; /* Each takes 50% width */
+}
+
+/* 5. Labels */
+.input-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #666; /* Softer grey than black */
+  font-size: 0.9rem;
+  letter-spacing: 0.3px;
+}
+
+/* 6. Inputs & Selects */
+.input-field {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 1rem;
+  background-color: #fafafa;
+  color: #333;
+  transition: all 0.2s ease;
+  appearance: none; /* Removes default OS styling */
+}
+
+/* Focus State (When you click inside) */
+.input-field:focus {
+  background-color: #fff;
+  border-color: #007bff;
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1); /* Blue glow ring */
+  outline: none;
+}
+
+/* 7. Checkbox Section */
+.checkbox-group {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0; /* Divider line */
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+}
+
+.custom-checkbox {
+  width: 24px;
+  height: 24px;
+  accent-color: #007bff; /* Makes the checkmark blue */
+  cursor: pointer;
+}
+
+/* 8. Save Button (Optional, for looks) */
+.save-btn {
+  margin-top: 30px;
+  width: 100%;
+  padding: 16px;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.save-btn:active {
+  transform: scale(0.98);
+}
