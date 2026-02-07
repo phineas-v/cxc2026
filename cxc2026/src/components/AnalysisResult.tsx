@@ -1,8 +1,9 @@
+// src/components/AnalysisResult.tsx
 import './AnalysisResult.css'
 import type { RealFoodAnalysis } from '../types'
 
 interface Props {
-  data: RealFoodAnalysis | null // We now expect the full object, not just a list
+  data: RealFoodAnalysis | null
   loading: boolean
   error: string
 }
@@ -30,7 +31,8 @@ export default function AnalysisResults({ data, loading, error }: Props) {
   // Empty State
   if (!data) return null;
 
-  const { score, bar, reasons, ingredients_breakdown } = data;
+  // Destructure the new data structure
+  const { score, bar, reasons, ingredients_breakdown, lab_labels } = data;
 
   return (
     <div className="results-container">
@@ -49,19 +51,19 @@ export default function AnalysisResults({ data, loading, error }: Props) {
       {/* 2. THE VISUAL BAR (Positive vs Negative) */}
       <div className="bar-section">
         <div className="bar-labels">
-            <span style={{color: '#2ecc71'}}>Healthy Signs</span>
-            <span style={{color: '#e74c3c'}}>Processing Signs</span>
+            <span style={{color: '#2ecc71'}}>Real Food</span>
+            <span style={{color: '#e74c3c'}}>Processed</span>
         </div>
         <div className="progress-bar-container">
             {/* Green Bar (Positive) */}
             <div 
                 className="bar-segment positive" 
-                style={{ flex: bar.positive_ratio || 0.5 }}
+                style={{ flex: bar.positive_ratio || 0.05 }} // Min width for visibility
             />
             {/* Red Bar (Negative) */}
             <div 
                 className="bar-segment negative" 
-                style={{ flex: bar.negative_ratio || 0.5 }}
+                style={{ flex: bar.negative_ratio || 0.05 }}
             />
         </div>
       </div>
@@ -89,33 +91,52 @@ export default function AnalysisResults({ data, loading, error }: Props) {
       {/* 4. INGREDIENT BREAKDOWN (Dropdowns) */}
       <h3 className="section-header">Ingredient Breakdown</h3>
       
-      {/* A. Concerning Ingredients */}
+      {/* A. Concerning Ingredients (negative_for_lens) */}
       <IngredientDropdown 
         title="⚠️ Concerning Additives" 
-        items={ingredients_breakdown.concerning} 
+        items={ingredients_breakdown.negative_for_lens} 
         color="red"
         isOpen={true} // Default open
       />
 
-      {/* B. Helpful Ingredients */}
+      {/* B. Helpful Ingredients (positive_for_lens) */}
       <IngredientDropdown 
         title="🥗 Whole Foods / Helpful" 
-        items={ingredients_breakdown.helpful} 
+        items={ingredients_breakdown.positive_for_lens} 
         color="green" 
       />
 
-      {/* C. Mixed / Neutral */}
+      {/* C. Mixed / Complex (mixed_for_lens) */}
       <IngredientDropdown 
         title="🤷 Mixed / Complex" 
-        items={ingredients_breakdown.mixed} 
+        items={ingredients_breakdown.mixed_for_lens} 
         color="orange" 
       />
       
+      {/* D. Neutral (neutral_for_lens) */}
       <IngredientDropdown 
         title="🧂 Neutral (Water/Salt)" 
-        items={ingredients_breakdown.neutral} 
+        items={ingredients_breakdown.neutral_for_lens} 
         color="grey" 
       />
+
+      {/* 5. LAB LABELS (New Section) */}
+      {lab_labels && lab_labels.length > 0 && (
+        <div className="lab-labels-section">
+            <h3 className="section-header">📚 Lab Labels</h3>
+            <div className="lab-labels-list">
+                {lab_labels.map((label, i) => (
+                    <div key={i} className="lab-card">
+                        <div className="lab-name">{label.ingredient}</div>
+                        <div className="lab-desc">{label.plain_english}</div>
+                        <div className="lab-meta">
+                           <strong>Why added:</strong> {label.why_added}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+      )}
 
     </div>
   )

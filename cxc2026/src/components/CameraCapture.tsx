@@ -4,11 +4,15 @@ import './CameraCapture.css'
 import { type RealFoodAnalysis } from '../types' // Import new component
 import AnalysisResults from './AnalysisResult' // Import the new results component
 
+// Define the available lenses
+type LensType = 'focus' | 'real_food' | 'personal';
+
 export default function CameraCapture() {
   const [image, setImage] = useState<string | null>(null)
   const [realFoodAnalysis, setRealFoodAnalysis] = useState<RealFoodAnalysis | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>("")
+  const [selectedLens, setSelectedLens] = useState<LensType>('real_food') // Default to 'real_food' lens
 
   const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -23,6 +27,7 @@ export default function CameraCapture() {
 
       const formData = new FormData()
       formData.append("file", file)
+      formData.append("lens", selectedLens)
 
       try {
         // ⚠️ Make sure this IP matches your computer!
@@ -67,6 +72,37 @@ export default function CameraCapture() {
         
         {/* LEFT SIDE: Camera */}
         <div className="image-area">
+          {/* 3. NEW: LENS SELECTOR OVERLAY */}
+          {/* Only show if we haven't taken a photo yet, or just always show it? 
+              Usually nice to hide while loading, but keeping it visible is fine too. */}
+          {!image && (
+            <div className="lens-overlay">
+              <button 
+                className={`lens-btn ${selectedLens === 'focus' ? 'active' : ''}`}
+                onClick={() => setSelectedLens('focus')}
+              >
+                <span className="lens-icon">🔍</span>
+                <span className="lens-label">Focus</span>
+              </button>
+
+              <button 
+                className={`lens-btn ${selectedLens === 'real_food' ? 'active' : ''}`}
+                onClick={() => setSelectedLens('real_food')}
+              >
+                <span className="lens-icon">🥗</span>
+                <span className="lens-label">Real Food</span>
+              </button>
+
+              <button 
+                className={`lens-btn ${selectedLens === 'personal' ? 'active' : ''}`}
+                onClick={() => setSelectedLens('personal')}
+              >
+                <span className="lens-icon">👤</span>
+                <span className="lens-label">Personal</span>
+              </button>
+            </div>
+          )}
+          
           {image ? (
             <img src={image} alt="Captured" className="photo-preview" />
           ) : (
@@ -78,11 +114,13 @@ export default function CameraCapture() {
         </div>
 
         {/* RIGHT SIDE: The New Results Component */}
-        <AnalysisResults 
-          data={realFoodAnalysis} 
-          loading={loading} 
-          error={error} 
-        />
+        <div className="results-list">
+            <AnalysisResults 
+              data={realFoodAnalysis} 
+              loading={loading} 
+              error={error} 
+            />
+        </div>
 
       </div>
 
