@@ -64,48 +64,70 @@ export default function CameraCapture() {
     }
   }
 
-  // Helper to choose color based on status
-  const getStatusColor = (status: string) => {
-    if (status === "SAFE") return "green-card";
-    if (status === "DANGER") return "red-card";
-    return "orange-card"; // Caution
+  // ... (keep all your imports and logic above) ...
+
+  // Helper function to get the class name based on status string
+  const getStatusClass = (status: string) => {
+    const s = status.toUpperCase();
+    if (s === "SAFE") return "safe";
+    if (s === "DANGER") return "danger";
+    return "caution";
   }
+
+  const hasResults = ingredients.length > 0;
 
   return (
     <div className="camera-container">
-      {/* Image Area */}
-      <div className="image-area">
+      {/* 1. Image Area (Dynamic Size) 
+          If no results, add 'full-screen' class to make it big.
+      */}
+      <div className={`image-area ${!hasResults ? 'full-screen' : ''}`}>
         {image ? (
           <img src={image} alt="Captured" className="photo-preview" />
         ) : (
           <div className="placeholder">
-            <p>Take a photo of ingredients 📸</p>
+            {/* You can add an icon here if you want */}
+            <div style={{fontSize: '3rem', marginBottom: '10px'}}>📸</div>
+            <p>Take a photo of ingredients</p>
           </div>
         )}
       </div>
 
-      {/* Results Area (The Dropdowns!) */}
-      <div className="results-list">
-        {loading && <p className="loading-text">Analyzing Health Risks... 🏥</p>}
+      {/* 2. Results List (Hidden until we have data) */}
+      <div className={`results-list ${!hasResults && !loading ? 'hidden' : ''}`}>
+        
+        {loading && (
+           <div className="loading-text">
+             <p>🧠 AI is analyzing ingredients...</p>
+           </div>
+        )}
+        
         {error && <p className="error-text">{error}</p>}
 
+        {hasResults && (
+          <h3 style={{margin: '0 0 15px 5px', color: 'white'}}>
+            Analysis Results ({ingredients.length})
+          </h3>
+        )}
+
         {ingredients.map((item, index) => (
-          // <details> creates the dropdown automatically
-          <details key={index} className={`ingredient-card ${getStatusColor(item.status)}`}>
-            <summary className="ingredient-header">
+          <details key={index} className="ingredient-card">
+            <summary className={`ingredient-header ${item.status.toLowerCase()}`}>
               <span className="ingredient-name">{item.name}</span>
-              <span className="ingredient-score">{item.score}/100</span>
+              {/* Dynamic color for badge based on status */}
+              <span className={`score-badge ${item.status.toLowerCase()}`}>
+                {item.score}
+              </span>
             </summary>
             
             <div className="ingredient-body">
-              <p><strong>Status:</strong> {item.status}</p>
               <p>{item.explanation}</p>
             </div>
           </details>
         ))}
       </div>
 
-      {/* Controls */}
+      {/* 3. Bottom Button (Always visible) */}
       <div className="controls-area">
         <input 
           type="file" 
@@ -117,7 +139,7 @@ export default function CameraCapture() {
         />
         
         <label htmlFor="cameraInput" className="camera-button">
-          {loading ? "Scanning..." : "📸 Snap Ingredients"}
+          {loading ? "Scanning..." : (image ? "📸 Retake Photo" : "📸 Open Camera")}
         </label>
       </div>
     </div>
