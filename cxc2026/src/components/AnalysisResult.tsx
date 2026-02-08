@@ -33,7 +33,7 @@ export default function AnalysisResults({ data, loading, error, audio }: Props) 
   // Empty State
   if (!data) return null;
   
-  const { lens, score, bar, reasons, ingredients_breakdown, lab_labels } = data;
+  const { lens, score, reasons, ingredients_breakdown, lab_labels } = data;
 
   return (
     <div className="results-container">
@@ -98,7 +98,6 @@ export default function AnalysisResults({ data, loading, error, audio }: Props) 
 
       {/* 4. INGREDIENT BREAKDOWN (Dropdowns) */}
       <h3 className="section-header">Ingredient Breakdown</h3>
-      
 
       {/* B. Helpful Ingredients (positive_for_lens) */}
       <IngredientDropdown 

@@ -115,9 +115,9 @@
 }
 
 .bar-segment { height: 100%; transition: width 1s ease-out; }
-.bar-segment.positive { background: linear-gradient(90deg, #31cc2e, #aadc75); }
-.bar-segment.neutral { background: linear-gradient(90deg, #e3f9a8, #f19721); }
-.bar-segment.negative { background: linear-gradient(90deg, #e7803c, #c0392b); }
+.bar-segment.positive { background: linear-gradient(90deg, #31cc2e, #31cc2e); }
+.bar-segment.neutral { background: linear-gradient(90deg, #454543, #454543); }
+.bar-segment.negative { background: linear-gradient(90deg, #c0392b, #c0392b); }
 
 
 /* 6. REASONS (Bullet Points) */

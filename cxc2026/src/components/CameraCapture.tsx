@@ -32,7 +32,7 @@ export default function CameraCapture() {
 
       try {
         // 1. Fetch from Backend
-        const response = await fetch("http://10.189.4.149:8000/api/analyze", {
+        const response = await fetch("http://172.20.10.3:8000/api/analyze", {
           method: "POST",
           body: formData,
         })

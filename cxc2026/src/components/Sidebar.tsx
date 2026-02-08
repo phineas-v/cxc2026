@@ -1,4 +1,3 @@
-// src/components/Sidebar.tsx
 import './Sidebar.css'
 
 interface SidebarProps {
@@ -17,13 +16,7 @@ export default function Sidebar({ isOpen, onClose, onNavigate, activePage }: Sid
 
   return (
     <>
-      {/* 1. BACKDROP (Darkens the background when menu is open) */}
-      <div 
-        className={`sidebar-backdrop ${isOpen ? 'open' : ''}`} 
-        onClick={onClose}
-      />
-
-      {/* 2. SIDEBAR PANEL */}
+      <div className={`sidebar-backdrop ${isOpen ? 'open' : ''}`} onClick={onClose} />
       <div className={`sidebar-panel ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <h2>Menu</h2>
