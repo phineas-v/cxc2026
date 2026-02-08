@@ -3,6 +3,7 @@ import CameraCapture from './components/CameraCapture'
 import UserProfile from './components/UserProfile'
 import Sidebar from './components/Sidebar'
 import './App.css'
+import AudioButton from './components/AudioButton'
 
 function App() {
   // State to track which page is visible

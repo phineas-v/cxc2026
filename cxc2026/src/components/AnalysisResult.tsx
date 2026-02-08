@@ -1,14 +1,16 @@
 // src/components/AnalysisResult.tsx
 import './AnalysisResult.css'
 import type { RealFoodAnalysis } from '../types'
+import AudioButton from './AudioButton'
 
 interface Props {
   data: RealFoodAnalysis | null
   loading: boolean
   error: string
+  audio?: string; 
 }
 
-export default function AnalysisResults({ data, loading, error }: Props) {
+export default function AnalysisResults({ data, loading, error, audio }: Props) {
   
   // Helper for Score Color
   const getScoreColor = (score: number) => {
@@ -30,13 +32,14 @@ export default function AnalysisResults({ data, loading, error }: Props) {
 
   // Empty State
   if (!data) return null;
-
-  // Destructure the new data structure
+  
   const { lens, score, bar, reasons, ingredients_breakdown, lab_labels } = data;
 
   return (
     <div className="results-container">
-      
+      {/* AUDIO BUTTON */}
+      <AudioButton base64Audio={audio} />
+
       {/* 1. BIG SCORE CARD */}
       <div className="score-card">
         <h3 className="card-title">{lens}</h3>
@@ -51,19 +54,24 @@ export default function AnalysisResults({ data, loading, error }: Props) {
       {/* 2. THE VISUAL BAR (Positive vs Negative) */}
       <div className="bar-section">
         <div className="bar-labels">
-            <span style={{color: '#2ecc71'}}>Real Food</span>
-            <span style={{color: '#e74c3c'}}>Processed</span>
+            <span style={{color: '#2ecc71'}}>Postive</span>
+            <span style={{color: '#e74c3c'}}>Negative</span>
         </div>
         <div className="progress-bar-container">
             {/* Green Bar (Positive) */}
             <div 
                 className="bar-segment positive" 
-                style={{ flex: bar.positive_ratio || 0.05 }} // Min width for visibility
+                style={{ flex: ingredients_breakdown.positive_for_lens.length || 0.05 }} // Min width for visibility
+            />
+            {/* Spacer (Neutral) */}
+            <div 
+                className="bar-segment neutral" 
+                style={{ flex: ingredients_breakdown.neutral_for_lens.length || 0.05 }}
             />
             {/* Red Bar (Negative) */}
             <div 
                 className="bar-segment negative" 
-                style={{ flex: bar.negative_ratio || 0.05 }}
+                style={{ flex: ingredients_breakdown.negative_for_lens.length || 0.05 }}
             />
         </div>
       </div>
@@ -91,13 +99,6 @@ export default function AnalysisResults({ data, loading, error }: Props) {
       {/* 4. INGREDIENT BREAKDOWN (Dropdowns) */}
       <h3 className="section-header">Ingredient Breakdown</h3>
       
-      {/* A. Concerning Ingredients (negative_for_lens) */}
-      <IngredientDropdown 
-        title="⚠️ Concerning" 
-        items={ingredients_breakdown.negative_for_lens} 
-        color="red"
-        isOpen={true} // Default open
-      />
 
       {/* B. Helpful Ingredients (positive_for_lens) */}
       <IngredientDropdown 
@@ -118,6 +119,14 @@ export default function AnalysisResults({ data, loading, error }: Props) {
         title="🧂 Neutral" 
         items={ingredients_breakdown.neutral_for_lens} 
         color="grey" 
+      />
+
+      {/* A. Concerning Ingredients (negative_for_lens) */}
+      <IngredientDropdown 
+        title="⚠️ Concerning" 
+        items={ingredients_breakdown.negative_for_lens} 
+        color="red"
+        isOpen={true} // Default open
       />
 
       {/* 5. LAB LABELS (New Section) */}

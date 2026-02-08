@@ -1,0 +1,50 @@
+/* src/components/AudioButton.css */
+
+.audio-fab {
+  /* ⚠️ FLOATING POSITIONING */
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100; /* Sit on top of the results card */
+
+  /* Button Styling */
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.2s, background 0.3s;
+}
+
+.audio-fab:active {
+  transform: scale(0.9);
+}
+
+.audio-fab.playing {
+  background: #6c5ce7; /* Purple when active */
+  color: white;
+}
+
+/* --- RIPPLE ANIMATION --- */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(108, 92, 231, 0.4);
+  animation: ripple-anim 1.5s infinite;
+  z-index: -1; /* Behind the button */
+}
+
+.r1 { width: 100%; height: 100%; animation-delay: 0s; }
+.r2 { width: 100%; height: 100%; animation-delay: 0.4s; }
+
+@keyframes ripple-anim {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2.5); opacity: 0; }
+}

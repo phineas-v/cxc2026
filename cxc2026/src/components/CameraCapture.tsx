@@ -1,7 +1,7 @@
 // src/components/CameraCapture.tsx
 import { useState, type ChangeEvent } from 'react'
 import './CameraCapture.css'
-import { type RealFoodAnalysis } from '../types' // Import new component
+import { type RealFoodAnalysis, type APIResponse} from '../types' // Import new component
 import AnalysisResults from './AnalysisResult' // Import the new results component
 
 // Define the available lenses
@@ -10,6 +10,7 @@ type LensType = 'focus' | 'real_food' | 'personal';
 export default function CameraCapture() {
   const [image, setImage] = useState<string | null>(null)
   const [realFoodAnalysis, setRealFoodAnalysis] = useState<RealFoodAnalysis | null>(null)
+  const [audioData, setAudioData] = useState<string | undefined>(undefined)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>("")
   const [selectedLens, setSelectedLens] = useState<LensType>('real_food') // Default to 'real_food' lens
@@ -30,39 +31,48 @@ export default function CameraCapture() {
       formData.append("lens", selectedLens)
 
       try {
-        // ⚠️ Make sure this IP matches your computer!
-        const response = await fetch("http://10.189.4.149:8000/api/analyzehardcoded", {
+        // 1. Fetch from Backend
+        const response = await fetch("http://10.189.4.149:8000/api/analyze", {
           method: "POST",
           body: formData,
         })
 
-        const data = await response.json()
-        
-        // Parse the JSON string from Backboard
-        let parsedData;
+        if (!response.ok) throw new Error("Backend failed");
+
+        // 2. Use the APIResponse Type
+        // This tells TypeScript that 'data' has 'health_analysis' and 'audio_base64'
+        const data: APIResponse = await response.json(); 
+
+        // --- A. HANDLE AUDIO (Separate State) ---
+        if (data.audio_base64) {
+            setAudioData(data.audio_base64);
+        }
+
+        // --- B. HANDLE HEALTH ANALYSIS (Separate State) ---
+        let parsedAnalysis;
         try {
-            parsedData = typeof data.health_analysis === 'string' 
+            // It comes as a string, so we must parse it
+            parsedAnalysis = typeof data.health_analysis === 'string' 
                 ? JSON.parse(data.health_analysis) 
                 : data.health_analysis;
         } catch (e) {
-            parsedData = data.health_analysis;
+            console.error("JSON Parse Error:", e);
+            throw new Error("Could not read ingredients format.");
         }
 
-        if (parsedData) {
-            setRealFoodAnalysis(parsedData)
-        } else {
-            setError("Could not read ingredients format.")
+        if (parsedAnalysis) {
+            setRealFoodAnalysis(parsedAnalysis);
         }
 
       } catch (err) {
-        setError("Error: Could not reach the brain! 🧠❌")
+        console.error(err);
+        setError("Error: Could not reach the brain! 🧠❌");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
   }
-
-  const hasResults = realFoodAnalysis !== null || loading; // Keep results screen open if loading
+  const hasResults = realFoodAnalysis !== null || loading;
 
   return (
     <div className="camera-container">
@@ -119,6 +129,7 @@ export default function CameraCapture() {
               data={realFoodAnalysis} 
               loading={loading} 
               error={error} 
+              audio = {audioData}
             />
         </div>
 

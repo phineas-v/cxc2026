@@ -57,3 +57,9 @@ export interface RealFoodAnalysis {
   sources_consulted: { source: string; how_used: string }[]
   notes: string[]
 }
+
+export interface APIResponse {
+  health_analysis: string; // This is the stringified JSON we need to parse
+  audio_base64?: string;   // This sits alongside it
+  narrative_text?: string;
+}

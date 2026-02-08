@@ -115,8 +115,10 @@
 }
 
 .bar-segment { height: 100%; transition: width 1s ease-out; }
-.bar-segment.positive { background: linear-gradient(90deg, #2ecc71, #27ae60); }
-.bar-segment.negative { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+.bar-segment.positive { background: linear-gradient(90deg, #31cc2e, #aadc75); }
+.bar-segment.neutral { background: linear-gradient(90deg, #e3f9a8, #f19721); }
+.bar-segment.negative { background: linear-gradient(90deg, #e7803c, #c0392b); }
+
 
 /* 6. REASONS (Bullet Points) */
 .reasons-section { margin-bottom: 30px; }
@@ -168,10 +170,10 @@
 .ing-dropdown summary::-webkit-details-marker { display: none; }
 
 /* Status Colors */
-.ing-dropdown.red summary { border-left: 6px solid #e74c3c; color: #c0392b; }
-.ing-dropdown.green summary { border-left: 6px solid #2ecc71; color: #27ae60; }
-.ing-dropdown.orange summary { border-left: 6px solid #f39c12; color: #d35400; }
-.ing-dropdown.grey summary { border-left: 6px solid #95a5a6; color: #7f8c8d; }
+.ing-dropdown.red summary { border-left: 6px solid #ff0000; color: #ff0000; }
+.ing-dropdown.green summary { border-left: 6px solid #00ff00; color: #00ff00; }
+.ing-dropdown.orange summary { border-left: 6px solid #f39c12; color: #f39c12; }
+.ing-dropdown.grey summary { border-left: 6px solid #95a5a6; color: #95a5a6; }
 
 .count-badge {
   background: #f1f3f5;
