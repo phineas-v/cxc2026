@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import CameraCapture from './components/CameraCapture'
-import UserProfile from './components/UserProfile'
+import UserProfile, {type UserData} from './components/UserProfile'
 import Sidebar from './components/Sidebar'
 import './App.css'
 
@@ -10,6 +10,23 @@ function App() {
   
   // State to track if sidebar is open
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [userProfile, setUserProfile] = useState<UserData>({
+    goal: 'loss',
+    diet: 'Halal',
+    peanut: false,
+    tree_nut: false,
+    dairy: false,
+    gluten: false,
+    egg: false,
+    shellfish: false,
+    sesame: false,
+    soy: false,
+    avoid_artificial_colors: false,
+    avoid_artificial_sweeteners: false,
+    avoid_ultra_processed: false,
+    caffeine_sensitive: false,
+    flags: []
+  })  
 
   return (
     <div className="app-container">
@@ -36,9 +53,9 @@ function App() {
       {/* 3. PAGE CONTENT */}
       <div className="main-content">
         {currentPage === 'camera' ? (
-          <CameraCapture />
+          <CameraCapture {...userProfile} />
         ) : (
-          <UserProfile />
+          <UserProfile {...userProfile} setUserProfile={setUserProfile} />
         )}
       </div>
 

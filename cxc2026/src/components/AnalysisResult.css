@@ -116,8 +116,9 @@
 
 .bar-segment { height: 100%; transition: width 1s ease-out; }
 .bar-segment.positive { background: linear-gradient(90deg, #31cc2e, #31cc2e); }
-.bar-segment.neutral { background: linear-gradient(90deg, #454543, #454543); }
+.bar-segment.neutral { background: linear-gradient(90deg, #9d9d98, #9d9d98); }
 .bar-segment.negative { background: linear-gradient(90deg, #c0392b, #c0392b); }
+.bar-segment.mixed { background: linear-gradient(90deg, #e88112, #e88112); }
 
 
 /* 6. REASONS (Bullet Points) */

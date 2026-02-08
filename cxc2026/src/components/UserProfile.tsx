@@ -26,27 +26,8 @@ export interface UserData {
   flags: string[]
 }
 
-export default function UserProfile() {
-  const [user, setUser] = useState<UserData>({
-    goal: 'gain',
-    diet: 'Halal',
-
-    peanut: false,
-    tree_nut: false,
-    dairy: false,
-    gluten: false,
-    egg: false,
-    shellfish: false,
-    sesame: false,
-    soy: false,
-
-    avoid_artificial_colors: false,
-    avoid_artificial_sweeteners: false,
-    avoid_ultra_processed: false,
-    caffeine_sensitive: false,
-
-    flags: [],
-  })
+export default function UserProfile(userData: UserData & { setUserProfile: (data: UserData) => void }) {
+  const [user, setUser] = useState<UserData>(userData)
 
   const [flagInput, setFlagInput] = useState('')
 
@@ -71,6 +52,10 @@ export default function UserProfile() {
       flags: prev.flags.map((flag, i) => (i === index ? newValue : flag))
     }))
   }
+
+  // Share the data back up to App when user changes anything
+  // (This way, the Sidebar can also read the latest profile data to show warnings)
+  userData.setUserProfile(user)
 
   return (
     <div className="profile-container">
@@ -194,7 +179,6 @@ export default function UserProfile() {
           </div>
         </div>
 
-        <button className="save-btn">Save Changes</button>
 
       </div>
     </div>
